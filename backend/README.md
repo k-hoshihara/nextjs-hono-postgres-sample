@@ -7,13 +7,36 @@
 - **Hono** — Web フレームワーク
 - **@hono/zod-openapi** — OpenAPI 3.0 仕様の自動生成 + バリデーション
 - **@hono/swagger-ui** — Swagger UI のホスティング
-- **Drizzle ORM** — PostgreSQL 用 ORM
+- **Drizzle ORM** + **drizzle-kit** — PostgreSQL 用 ORM とマイグレーション
+- **node-postgres (`pg`)** — PostgreSQL ドライバ
 - **TypeScript** / **tsx** — 型と開発時実行
+
+## 前提
+
+- Node.js >=24
+- Docker / Docker Compose（PostgreSQL コンテナ用）
 
 ## セットアップ
 
 ```bash
 npm install
+cp .env.example .env
+```
+
+`.env` に `DATABASE_URL` が定義されます（`compose.yaml` のデフォルト値に合わせ済み）。
+
+### PostgreSQL の起動
+
+プロジェクトルートで:
+
+```bash
+docker compose up -d
+```
+
+### マイグレーション
+
+```bash
+npm run db:migrate
 ```
 
 ## 起動
@@ -38,16 +61,31 @@ PORT=8090 npm run dev
 | `http://localhost:8080/doc` | OpenAPI 3.0 仕様 (JSON) |
 | `http://localhost:8080/api/...` | 各エンドポイント |
 
+## npm scripts
+
+| スクリプト | 用途 |
+|---|---|
+| `npm run dev` | 開発サーバー（自動リロード） |
+| `npm run start` | 通常起動 |
+| `npm run typecheck` | TypeScript 型チェック |
+| `npm run db:generate` | `src/db/schema.ts` から SQL マイグレーションを生成 |
+| `npm run db:migrate` | 生成済みマイグレーションを DB に適用 |
+| `npm run db:push` | マイグレーションファイルを介さず DB にスキーマを直接反映（開発用） |
+| `npm run db:studio` | Drizzle Studio (DB GUI) を起動 |
+
 ## ディレクトリ構成
 
 ```
 backend/
 ├── package.json
 ├── tsconfig.json
+├── drizzle.config.ts
+├── drizzle/                  # 自動生成マイグレーション
 └── src/
     ├── index.ts              # エントリポイント (OpenAPIHono の組み立て)
     ├── db/
-    │   └── schema.ts         # Drizzle スキーマ
+    │   ├── schema.ts         # Drizzle スキーマ
+    │   └── client.ts         # pg.Pool + drizzle 接続
     └── openapi/
         ├── common.ts         # 共通スキーマ (IdParam, Error, Timestamps)
         └── routes/           # リソースごとの I/F 定義
@@ -72,4 +110,4 @@ backend/
 
 ## 状態
 
-ハンドラはまだ未実装（`throw new Error("Not implemented")`）。I/F 定義のみ。
+ハンドラはまだ未実装（`throw new Error("Not implemented")`）。I/F 定義と DB スキーマのみ。
