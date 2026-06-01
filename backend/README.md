@@ -73,6 +73,8 @@ PORT=8090 npm run dev
 | `npm run db:push` | マイグレーションファイルを介さず DB にスキーマを直接反映（開発用） |
 | `npm run db:studio` | Drizzle Studio (DB GUI) を起動 |
 
+マイグレーションのワークフロー詳細は [`docs/DB_MIGRATION.md`](./docs/DB_MIGRATION.md) を参照。
+
 ## ディレクトリ構成
 
 ```

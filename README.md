@@ -45,6 +45,7 @@ npm run dev
 
 起動後、`http://localhost:8080/ui` で Swagger UI が確認できます。
 詳細は [`backend/README.md`](./backend/README.md) を参照。
+スキーマ変更時のマイグレーション運用は [`backend/docs/DB_MIGRATION.md`](./backend/docs/DB_MIGRATION.md) を参照。
 
 ### 3. Frontend
 
